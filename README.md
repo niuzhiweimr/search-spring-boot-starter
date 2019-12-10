@@ -103,7 +103,7 @@
         
 
    (改)例：
-  
+   
    1)主键更新：
    
         //索引配置
@@ -126,7 +126,7 @@
                   }
               }.execute(esOrder);                                            
  
-   1)条件更新：
+   2)条件更新：
        
         //索引配置
         private static ElasticsearchConfig esConfiguration = ElasticsearchConfig.order();
@@ -188,7 +188,7 @@
                     }
                 }.list(searchConditions, 0, 2);
    
-   2)分页排序查询
+   3)分页排序查询
       
            //索引配置
            private static ElasticsearchConfig esConfiguration = ElasticsearchConfig.order();
