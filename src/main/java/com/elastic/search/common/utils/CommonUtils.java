@@ -143,7 +143,8 @@ public class CommonUtils {
         try {
 
             ByteArrayOutputStream swapStream = new ByteArrayOutputStream();
-            byte[] buff = new byte[100]; // buff用于存放循环读取的临时数据
+            // buff用于存放循环读取的临时数据
+            byte[] buff = new byte[100];
             int rc = 0;
             while ((rc = inStream.read(buff, 0, 100)) > 0) {
                 swapStream.write(buff, 0, rc);

@@ -67,7 +67,7 @@ public class SearchBaseResult<T> extends BaseResult {
      * @return
      */
     public static SearchBaseResult<Object> part(Object result) {
-        SearchBaseResult<Object> searchResult = new SearchBaseResult<Object>();
+        SearchBaseResult<Object> searchResult = new SearchBaseResult<>();
         searchResult.setResult(result);
         searchResult.status.setStatusCode(ErrorCode.PART_ERROR.getErrorCode(), true);
         searchResult.status.setStatusReason(ErrorCode.PART_ERROR.getErrorReason());
