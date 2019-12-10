@@ -394,7 +394,6 @@ public abstract class BaseSearchQueryExecutor<T> extends SearchAdapter<QueryESOb
      * @param pageCondition
      * @return
      * @throws SystemException
-     * @Author Mr.HK
      */
     public synchronized List<T> cascade(String name, Object value, List<OrderCondition> orderConditions, PageCondition pageCondition) throws SystemException {
         try {
