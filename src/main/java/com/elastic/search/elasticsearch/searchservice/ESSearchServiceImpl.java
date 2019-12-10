@@ -5,8 +5,6 @@ import com.elastic.search.common.domain.SearchBaseResult;
 import com.elastic.search.elasticsearch.dataobject.*;
 import com.elastic.search.elasticsearch.service.ESNestedSearchService;
 import com.elastic.search.elasticsearch.validator.*;
-import com.sinoiov.search.elasticsearch.dataobject.*;
-import com.sinoiov.search.elasticsearch.validator.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;

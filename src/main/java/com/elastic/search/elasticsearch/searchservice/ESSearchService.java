@@ -3,7 +3,6 @@ package com.elastic.search.elasticsearch.searchservice;
 
 import com.elastic.search.common.domain.SearchBaseResult;
 import com.elastic.search.elasticsearch.dataobject.*;
-import com.sinoiov.search.elasticsearch.dataobject.*;
 
 
 /**

@@ -2,7 +2,6 @@ package com.elastic.search.elasticsearch.dataobject;
 
 
 import com.elastic.search.elasticsearch.dataobject.conditions.*;
-import com.sinoiov.search.elasticsearch.dataobject.conditions.*;
 
 import java.io.Serializable;
 import java.util.ArrayList;
