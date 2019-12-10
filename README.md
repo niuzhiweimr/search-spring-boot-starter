@@ -3,7 +3,7 @@
     默认spring boot 版本为 2.1.5.RELEASE 下载完成项目后可更改为自己项目使用的spring boot版本  
     默认ElasticSearch 版本为 6.4.2 不建议升级ES版本因为有些函数再高版本有改动-注：ES7版本对6版本不兼容
 
- # redis集成说明
+ # 集成说明
                      
 1：关于ElasticSearch的配置参数 详见类 { EtcElasticSearchProperties }
   
@@ -15,7 +15,7 @@
             <version>${version}</version>
         </dependency>
  
- # redis使用说明
+ # 使用说明
   
  1 操作函数详见此包 { com.elastic.search.elasticsearch.infrastructure.executor }
   
