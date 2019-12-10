@@ -434,7 +434,6 @@ public abstract class BaseSearchQueryExecutor<T> extends SearchAdapter<QueryESOb
      * @param name
      * @return
      * @throws SystemException
-     * @Author Mr.HK
      */
     public synchronized List<T> cascade(String name, Object value, List<OrderCondition> orderConditions) throws SystemException {
         try {
@@ -473,7 +472,6 @@ public abstract class BaseSearchQueryExecutor<T> extends SearchAdapter<QueryESOb
      * @param name
      * @return
      * @throws SystemException
-     * @Author Mr.HK
      */
     public synchronized List<T> cascade(String name, Object value) throws SystemException {
         try {
@@ -511,7 +509,6 @@ public abstract class BaseSearchQueryExecutor<T> extends SearchAdapter<QueryESOb
      * @param pageCondition
      * @return
      * @throws SystemException
-     * @Author Mr.HK
      */
     public synchronized List<T> cascade(String name, Object value, List<SearchCondition> searchConditions, List<OrderCondition> orderConditions, PageCondition pageCondition) throws SystemException {
         try {

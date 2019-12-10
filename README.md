@@ -1,7 +1,7 @@
  # 版本说明
    
     默认spring boot 版本为 2.1.5.RELEASE 下载完成项目后可更改为自己项目使用的spring boot版本  
-    默认ElasticSearch 版本为 6.4.2 不建议升级ES版本因为有些函数再高版本有改动-注：ES7版本对6版本不兼容
+    默认ElasticSearch 版本为 6.4.2 极大简化ES操作难度 注：ES版本不要升级如果升级版本太高可能部分函数不兼容
 
  # 集成说明
                      
@@ -45,9 +45,9 @@
      }
 
     
-  3 执行ElasticSearch操作 
+  3 执行ElasticSearch操作  注：以下示例操作并非最全函数可以自己探索 ，「索引配置」是类中的一个静态属性每个示例都写是为了方便理解
   
-   (增加)例：
+   (增)例：
         
             索引配置
             private static ElasticsearchConfig esConfiguration = ElasticsearchConfig.order();
@@ -71,5 +71,139 @@
                          }
                      }.execute(esOrder);
                
-  #TODO: 其他操作后续完善此文档
-                                          
+    
+   (删)例：                                          
+   
+   1)主键删除
+       
+        //索引配置
+        private static ElasticsearchConfig esConfiguration = ElasticsearchConfig.order();
+        
+        Boolean execute = new BaseSearchDeleteExecutor<Boolean>() {
+                   @Override
+                   public ElasticsearchConfig getConfig() {
+                       return esConfiguration;
+                   }
+               }.execute(1000002L);
+                       
+   2)条件删除
+     
+        //索引配置
+        private static ElasticsearchConfig esConfiguration = ElasticsearchConfig.order();
+        
+        List<SearchCondition> searchConditions = SearchConditionUtils.start()
+                        .addCondition("id", 1000000, ConditionExpressionEnum.EQUAL)
+                        .end();
+        Boolean execute = new BaseSearchDeleteExecutor<Boolean>() {
+                    @Override
+                    public ElasticsearchConfig getConfig() {
+                        return esConfiguration;
+                    }
+                }.execute(searchConditions);
+        
+
+   (改)例：
+   1)主键更新：
+   
+        //索引配置
+        private static ElasticsearchConfig esConfiguration = ElasticsearchConfig.order();
+        
+        EsOrder esOrder = new EsOrder();
+        esOrder.setId(1000001L);
+        esOrder.setOrderId("123");
+        esOrder.setAmount(10.0);
+        esOrder.setCategoryId(11);
+        esOrder.setProductCode("123");
+        esOrder.setStoreName("测试");
+        esOrder.setQuantity(1);
+        esOrder.setCreateTime(new Date());
+              
+        Boolean execute = new BaseSearchUpdateExecutor<EsOrder>() {
+                  @Override
+                  public ElasticsearchConfig getConfig() {
+                      return esConfiguration;
+                  }
+              }.execute(esOrder);                                            
+ 
+   1)条件更新：
+       
+        //索引配置
+        private static ElasticsearchConfig esConfiguration = ElasticsearchConfig.order();
+      
+        EsOrder esOrder = new EsOrder();
+        esOrder.setId(1000001L);
+        esOrder.setOrderId("123");
+        esOrder.setAmount(10.0);
+        esOrder.setCategoryId(11);
+        esOrder.setProductCode("123");
+        esOrder.setStoreName("测试");
+        esOrder.setQuantity(1);
+        esOrder.setCreateTime(new Date());
+      
+        //条件
+        List<SearchCondition> searchConditions = SearchConditionUtils.start()
+                      .addCondition("id", 1000000, ConditionExpressionEnum.EQUAL)
+                      .end();
+      
+        Boolean execute = new BaseSearchUpdateExecutor<EsOrder>() {
+                  @Override
+                  public ElasticsearchConfig getConfig() {
+                      return esConfiguration;
+                  }
+              }.execute(esOrder, searchConditions);
+
+   (查)例：
+    
+   1)普通条件查询
+     
+        //索引配置
+        private static ElasticsearchConfig esConfiguration = ElasticsearchConfig.order();
+
+        List<SearchCondition> searchConditions = SearchConditionUtils.start()
+                        .addCondition("orderId", 123, ConditionExpressionEnum.EQUAL)
+                        .addCondition("id", 1000002, ConditionExpressionEnum.EQUAL)
+                        .end();
+        List<EsOrder> list = new BaseSearchQueryExecutor<EsOrder>() {
+                    @Override
+                    public ElasticsearchConfig getConfig() {
+                        return esConfiguration;
+                    }
+                }.list(searchConditions);
+        
+      
+   2)分页查询
+   
+        //索引配置
+        private static ElasticsearchConfig esConfiguration = ElasticsearchConfig.order();
+        
+        List<SearchCondition> searchConditions = SearchConditionUtils.start()
+                        .addCondition("orderId", 123, ConditionExpressionEnum.EQUAL)
+                        .end();
+                        
+         List<EsOrder> list = new BaseSearchQueryExecutor<EsOrder>() {
+                    @Override
+                    public ElasticsearchConfig getConfig() {
+                        return esConfiguration;
+                    }
+                }.list(searchConditions, 0, 2);
+   
+   2)分页排序查询
+      
+           //索引配置
+           private static ElasticsearchConfig esConfiguration = ElasticsearchConfig.order();
+           
+           //分页
+           PageCondition pageCondition = PageConditionUtils.create(2, 0);
+           //排序
+           List<OrderCondition> orderConditions = OrderConditionUtils.start().addCondition("createTime", SortEnum.DESC).end();
+           //条件
+           List<SearchCondition> searchConditions = SearchConditionUtils.start()
+                          .addCondition("orderId", 123, ConditionExpressionEnum.EQUAL)
+                          .end();
+                           
+           List<EsOrder> list = new BaseSearchQueryExecutor<EsOrder>() {
+                       @Override
+                       public ElasticsearchConfig getConfig() {
+                           return esConfiguration;
+                       }
+                   }.list(searchConditions, orderConditions, pageCondition);
