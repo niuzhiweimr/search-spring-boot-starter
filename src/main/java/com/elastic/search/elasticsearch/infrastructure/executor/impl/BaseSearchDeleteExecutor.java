@@ -47,6 +47,29 @@ public abstract class BaseSearchDeleteExecutor<T> extends SearchAdapter<DeleteES
         }
     }
 
+
+    /**
+     * 根据主键删除一条数据
+     *
+     * @param primaryKey
+     * @return
+     */
+    public synchronized Boolean execute(String primaryKey) throws FrameworkException {
+        try {
+            DeleteESObject obj = this.setConfig(this.getConfig(), DeleteESObject.class.newInstance());
+            obj.setId(primaryKey);
+            SearchBaseResult<Boolean> result = SearchBeanContext.getBean(ESSearchService.class).esDelete(obj);
+            if (result.isSuccess()) {
+                return result.getResult();
+            } else {
+                throw new FrameworkException(FrameworkExceptionConstants.ERROR_SEARCH_ENGINES, result.toJSON());
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw new FrameworkException(FrameworkExceptionConstants.ERROR_SEARCH_ENGINES, "搜索引擎异常(根据主键删除一条数据): primaryKey={" + primaryKey + "}, error={" + e.getLocalizedMessage() + "}");
+        }
+    }
+
     /**
      * 根据主键批量删除
      *
@@ -59,6 +82,35 @@ public abstract class BaseSearchDeleteExecutor<T> extends SearchAdapter<DeleteES
             BatchDeleteESObject bdo = new BatchDeleteESObject();
             List<DeleteESObject> list = new ArrayList<DeleteESObject>();
             for (Long key : primaryKeys) {
+                DeleteESObject de = this.setConfig(this.getConfig(), DeleteESObject.class.newInstance());
+                de.setId(key);
+                list.add(de);
+            }
+            bdo.setDeleteDatas(list);
+            SearchBaseResult<Boolean> result = this.esSearchService.esBatchDelete(bdo);
+            if (result.isSuccess()) {
+                return result.getResult();
+            } else {
+                throw new FrameworkException(FrameworkExceptionConstants.ERROR_SEARCH_ENGINES, result.toJSON());
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw new FrameworkException(FrameworkExceptionConstants.ERROR_SEARCH_ENGINES, "搜索引擎异常(据主键批量删除): primaryKeys={" + primaryKeys + "}, error={" + e.getLocalizedMessage() + "}");
+        }
+    }
+
+    /**
+     * 根据主键批量删除
+     *
+     * @param primaryKeys
+     * @return
+     * @throws FrameworkExceptionConstants
+     */
+    public synchronized Boolean execute(String[] primaryKeys) throws FrameworkException {
+        try {
+            BatchDeleteESObject bdo = new BatchDeleteESObject();
+            List<DeleteESObject> list = new ArrayList<DeleteESObject>();
+            for (String key : primaryKeys) {
                 DeleteESObject de = this.setConfig(this.getConfig(), DeleteESObject.class.newInstance());
                 de.setId(key);
                 list.add(de);

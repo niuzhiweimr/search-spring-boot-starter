@@ -77,7 +77,82 @@ public abstract class BaseSearchQueryExecutor<T> extends SearchAdapter<QueryESOb
      * @return
      * @throws SystemException
      */
+    public synchronized T get(String primaryKey) throws SystemException {
+        try {
+            QueryESObject obj = this.setConfig(this.getConfig(), QueryESObject.class.newInstance());
+            List<SearchCondition> searchConditions = new ArrayList<SearchCondition>();
+            SearchCondition sc = new SearchCondition.Builder()
+                    .setFieldName(this.primaryKeyName)
+                    .setConditionExpression(ConditionExpressionEnum.EQUAL)
+                    .setSingleValue(primaryKey).build();
+            searchConditions.add(sc);
+            obj.setNeedFields(this.getNeedFields(this.getGenericActualType(this.getClass())));
+            obj.setSearchConditions(searchConditions);
+            SearchBaseResult<ESResponse> result = SearchBeanContext.getBean(ESSearchService.class).esQuery(obj);
+            if (result.isSuccess()) {
+                ESResponse response = null;
+                if ((response = result.getResult()) != null && ListUtils.isNotBlank(response.getEsDocuments())) {
+                    ESDocument doc = response.getEsDocuments().get(0);
+                    T t = ESSearchConvertor.map2Object(doc.getDataMap(), this.getGenericActualType(this.getClass()));
+                    return t;
+                }
+                return null;
+            } else {
+                throw new SystemException(FrameworkExceptionConstants.ERROR_SEARCH_ENGINES, ToStringBuilder.reflectionToString(result));
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw new SystemException(FrameworkExceptionConstants.ERROR_SEARCH_ENGINES, "搜索引擎异常(根据主键查询一条数据): primaryKey={" + primaryKey + "}, error={" + e.getLocalizedMessage() + "}");
+        }
+    }
+
+    /**
+     * 根据主键查询一条数据<br/>
+     * T中包含所有需要查询的数据字段，不需要的字段不能出现在T中
+     *
+     * @param primaryKey
+     * @return
+     * @throws SystemException
+     */
     public synchronized T get(Long primaryKey, Class<T> clazz) throws SystemException {
+        try {
+            QueryESObject obj = this.setConfig(this.getConfig(), QueryESObject.class.newInstance());
+            List<SearchCondition> searchConditions = new ArrayList<SearchCondition>();
+            SearchCondition sc = new SearchCondition.Builder()
+                    .setFieldName(this.primaryKeyName)
+                    .setConditionExpression(ConditionExpressionEnum.EQUAL)
+                    .setSingleValue(primaryKey + "").build();
+            searchConditions.add(sc);
+            obj.setNeedFields(this.getNeedFields(clazz));
+            obj.setSearchConditions(searchConditions);
+            SearchBaseResult<ESResponse> result = SearchBeanContext.getBean(ESSearchService.class).esQuery(obj);
+            if (result.isSuccess()) {
+                ESResponse response = null;
+                if ((response = result.getResult()) != null && ListUtils.isNotBlank(response.getEsDocuments())) {
+                    ESDocument doc = response.getEsDocuments().get(0);
+                    T t = ESSearchConvertor.map2Object(doc.getDataMap(), clazz);
+                    return t;
+                }
+                return null;
+            } else {
+                throw new SystemException(FrameworkExceptionConstants.ERROR_SEARCH_ENGINES, ToStringBuilder.reflectionToString(result));
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw new SystemException(FrameworkExceptionConstants.ERROR_SEARCH_ENGINES, "搜索引擎异常(根据主键查询一条数据): primaryKey={" + primaryKey + "}, error={" + e.getLocalizedMessage() + "}");
+        }
+    }
+
+
+    /**
+     * 根据主键查询一条数据<br/>
+     * T中包含所有需要查询的数据字段，不需要的字段不能出现在T中
+     *
+     * @param primaryKey
+     * @return
+     * @throws SystemException
+     */
+    public synchronized T get(String primaryKey, Class<T> clazz) throws SystemException {
         try {
             QueryESObject obj = this.setConfig(this.getConfig(), QueryESObject.class.newInstance());
             List<SearchCondition> searchConditions = new ArrayList<SearchCondition>();
