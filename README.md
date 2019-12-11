@@ -20,7 +20,7 @@
  1 操作函数详见此包 { com.elastic.search.elasticsearch.infrastructure.executor }
   
  2 配置索引名称需要继承 { BaseTypeIndexConfiguration } 注 :所有索引配置必须继承此类 
-   ,建议将所有索引多配置到一个类中方便进行管理
+   ,建议将所有索引都配置到一个类中方便进行管理
    
    例：
      
